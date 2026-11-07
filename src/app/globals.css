@@ -1,26 +1,58 @@
 @import "tailwindcss";
 
 :root {
+  /* الوضع الفاتح (Light Mode) */
   --background: #ffffff;
-  --foreground: #171717;
+  --foreground: #2d1b24; /* لون نص مائل للخمري الداكن جداً */
+  
+  --primary: #791a45; /* اللون الخمري الأساسي */
+  --primary-foreground: #ffffff;
+  
+  --secondary: #9c255b; /* خمري أفتح للـ Hover */
+  --secondary-foreground: #ffffff;
+  
+  --border: #e2d5dc; /* إطار بلون رمادي مائل للوردي الفاتح */
+}
+
+/* دعم الوضع الداكن (عبر الكلاس) */
+.dark {
+  --background: #170d12;
+  --foreground: #fce8f1;
+  --primary: #9c255b;
+  --primary-foreground: #ffffff;
+  --secondary: #bd3673;
+  --secondary-foreground: #ffffff;
+  --border: #3b222f;
+}
+
+/* دعم الوضع الداكن (عبر إعدادات الجهاز) */
+@media (prefers-color-scheme: dark) {
+  :root {
+    --background: #170d12;
+    --foreground: #fce8f1;
+    --primary: #9c255b;
+    --primary-foreground: #ffffff;
+    --secondary: #bd3673;
+    --secondary-foreground: #ffffff;
+    --border: #3b222f;
+  }
 }
 
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-border: var(--border);
+  
+  /* خط Cairo المعتمد للمشروع */
+  --font-sans: var(--font-cairo), ui-sans-serif, system-ui, sans-serif;
 }
 
 body {
-  background: var(--background);
+  background-color: var(--background);
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: var(--font-sans);
 }
