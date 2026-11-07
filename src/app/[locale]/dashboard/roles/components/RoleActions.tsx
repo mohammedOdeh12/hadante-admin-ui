@@ -26,11 +26,9 @@ export default function RoleActions({
 }) {
   const [isEditOpen, setIsEditOpen] = useState(false);
   const [isDeleteOpen, setIsDeleteOpen] = useState(false);
-
   const [isEditLoading, setIsEditLoading] = useState(false);
   const [isDeleteLoading, setIsDeleteLoading] = useState(false);
 
-  // حالات الصلاحيات
   const [availablePermissions, setAvailablePermissions] = useState<Permission[]>([]);
   const [selectedPermissions, setSelectedPermissions] = useState<number[]>(
     role.permissions ? role.permissions.map((p) => p.id) : []
@@ -41,14 +39,18 @@ export default function RoleActions({
     description: role.description || "",
   });
 
-  // جلب الصلاحيات عند فتح نافذة التعديل
   useEffect(() => {
     if (isEditOpen) {
       const fetchPermissions = async () => {
         try {
           const token = localStorage.getItem("token");
-          const response = await fetch("https://epidural-anointer-shrunk.ngrok-free.dev/api/admin/permissions", {
-            headers: { Authorization: `Bearer ${token}` },
+          const apiUrl = process.env.NEXT_PUBLIC_API_URL || "https://epidural-anointer-shrunk.ngrok-free.dev";
+          
+          const response = await fetch(`${apiUrl}/api/admin/permissions`, {
+            headers: { 
+              "Authorization": `Bearer ${token}`,
+              "ngrok-skip-browser-warning": "true" 
+            },
           });
           const data = await response.json();
           setAvailablePermissions(data.data || []);
@@ -80,17 +82,19 @@ export default function RoleActions({
 
     try {
       const token = localStorage.getItem("token");
+      const apiUrl = process.env.NEXT_PUBLIC_API_URL || "https://epidural-anointer-shrunk.ngrok-free.dev";
       
       const payload = {
         ...formData,
         permissionIds: selectedPermissions,
       };
 
-      const response = await fetch(`https://epidural-anointer-shrunk.ngrok-free.dev/api/admin/roles/${role.id}`, {
+      const response = await fetch(`${apiUrl}/api/admin/roles/${role.id}`, {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
+          "Authorization": `Bearer ${token}`,
+          "ngrok-skip-browser-warning": "true"
         },
         body: JSON.stringify(payload),
       });
@@ -111,10 +115,14 @@ export default function RoleActions({
     setIsDeleteLoading(true);
     try {
       const token = localStorage.getItem("token");
+      const apiUrl = process.env.NEXT_PUBLIC_API_URL || "https://epidural-anointer-shrunk.ngrok-free.dev";
 
-      const response = await fetch(`https://epidural-anointer-shrunk.ngrok-free.dev/api/admin/roles/${role.id}`, {
+      const response = await fetch(`${apiUrl}/api/admin/roles/${role.id}`, {
         method: "DELETE",
-        headers: { Authorization: `Bearer ${token}` },
+        headers: { 
+          "Authorization": `Bearer ${token}`,
+          "ngrok-skip-browser-warning": "true"
+        },
       });
 
       if (!response.ok) throw new Error("فشل الحذف");
@@ -186,7 +194,6 @@ export default function RoleActions({
               />
             </div>
 
-            {/* الصلاحيات بنفس التصميم المطلوب */}
             <div>
               <label className="block text-sm font-medium text-foreground mb-2">
                 {locale === "ar" ? "الصلاحيات الممنوحة *" : "Assigned Permissions *"}

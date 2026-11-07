@@ -43,8 +43,13 @@ export default function AdminActions({
       const fetchRoles = async () => {
         try {
           const token = localStorage.getItem("token");
-          const res = await fetch(`https://epidural-anointer-shrunk.ngrok-free.dev/api/admin/roles`, {
-            headers: { Authorization: `Bearer ${token}` },
+          const apiUrl = process.env.NEXT_PUBLIC_API_URL || "https://epidural-anointer-shrunk.ngrok-free.dev";
+
+          const res = await fetch(`${apiUrl}/api/admin/roles`, {
+            headers: { 
+              "Authorization": `Bearer ${token}`,
+              "ngrok-skip-browser-warning": "true" // تخطي التحذير
+            },
           });
           const data = await res.json();
           setRoles(data.data || []);
@@ -75,18 +80,21 @@ export default function AdminActions({
     setIsEditLoading(true);
     try {
       const token = localStorage.getItem("token");
+      const apiUrl = process.env.NEXT_PUBLIC_API_URL || "https://epidural-anointer-shrunk.ngrok-free.dev";
+      
       const payload = {
         ...formData,
         role_id: parseInt(formData.role_id as string),
       };
 
       const response = await fetch(
-        `https://epidural-anointer-shrunk.ngrok-free.dev/api/admin/super-admins/${admin.id}`,
+        `${apiUrl}/api/admin/super-admins/${admin.id}`,
         {
           method: "PUT",
           headers: {
             "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
+            "Authorization": `Bearer ${token}`,
+            "ngrok-skip-browser-warning": "true", // تخطي التحذير
           },
           body: JSON.stringify(payload),
         }
@@ -107,11 +115,16 @@ export default function AdminActions({
     setIsDeleteLoading(true);
     try {
       const token = localStorage.getItem("token");
+      const apiUrl = process.env.NEXT_PUBLIC_API_URL || "https://epidural-anointer-shrunk.ngrok-free.dev";
+
       const response = await fetch(
-        `https://epidural-anointer-shrunk.ngrok-free.dev/api/admin/super-admins/${admin.id}`,
+        `${apiUrl}/api/admin/super-admins/${admin.id}`,
         {
           method: "DELETE",
-          headers: { Authorization: `Bearer ${token}` },
+          headers: { 
+            "Authorization": `Bearer ${token}`,
+            "ngrok-skip-browser-warning": "true" // تخطي التحذير
+          },
         }
       );
       if (!response.ok) throw new Error("فشل الحذف");

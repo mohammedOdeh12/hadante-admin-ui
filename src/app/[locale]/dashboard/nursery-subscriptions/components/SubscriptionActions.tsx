@@ -39,7 +39,6 @@ export default function SubscriptionActions({
   const [nurseries, setNurseries] = useState<Nursery[]>([]);
   const [plans, setPlans] = useState<Plan[]>([]);
 
-  // استخراج الـ ID من الكائنات المتداخلة
   const [formData, setFormData] = useState({
     nursery_id: sub.nursery?.id?.toString() || "",
     plan_id: sub.plan?.id?.toString() || "",
@@ -54,12 +53,20 @@ export default function SubscriptionActions({
       const fetchData = async () => {
         try {
           const token = localStorage.getItem("token");
+          const apiUrl = process.env.NEXT_PUBLIC_API_URL || "https://epidural-anointer-shrunk.ngrok-free.dev";
+          
           const [nurseriesRes, plansRes] = await Promise.all([
-            fetch(`https://epidural-anointer-shrunk.ngrok-free.dev/api/admin/nurseries`, {
-              headers: { Authorization: `Bearer ${token}` },
+            fetch(`${apiUrl}/api/admin/nurseries`, {
+              headers: { 
+                Authorization: `Bearer ${token}`,
+                "ngrok-skip-browser-warning": "true" 
+              },
             }),
-            fetch(`https://epidural-anointer-shrunk.ngrok-free.dev/api/admin/subscription-plans`, {
-              headers: { Authorization: `Bearer ${token}` },
+            fetch(`${apiUrl}/api/admin/subscription-plans`, {
+              headers: { 
+                Authorization: `Bearer ${token}`,
+                "ngrok-skip-browser-warning": "true" 
+              },
             }),
           ]);
           setNurseries((await nurseriesRes.json()).data || []);
@@ -83,6 +90,8 @@ export default function SubscriptionActions({
     setIsEditLoading(true);
     try {
       const token = localStorage.getItem("token");
+      const apiUrl = process.env.NEXT_PUBLIC_API_URL || "https://epidural-anointer-shrunk.ngrok-free.dev";
+      
       const payload = {
         ...formData,
         nursery_id: parseInt(formData.nursery_id),
@@ -91,12 +100,13 @@ export default function SubscriptionActions({
       };
 
       const response = await fetch(
-        `https://epidural-anointer-shrunk.ngrok-free.dev/api/admin/nursery-subscriptions/${sub.id}`,
+        `${apiUrl}/api/admin/nursery-subscriptions/${sub.id}`,
         {
           method: "PUT",
           headers: {
             "Content-Type": "application/json",
             Authorization: `Bearer ${token}`,
+            "ngrok-skip-browser-warning": "true"
           },
           body: JSON.stringify(payload),
         },
@@ -117,11 +127,16 @@ export default function SubscriptionActions({
     setIsDeleteLoading(true);
     try {
       const token = localStorage.getItem("token");
+      const apiUrl = process.env.NEXT_PUBLIC_API_URL || "https://epidural-anointer-shrunk.ngrok-free.dev";
+      
       const response = await fetch(
-        `https://epidural-anointer-shrunk.ngrok-free.dev/api/admin/nursery-subscriptions/${sub.id}`,
+        `${apiUrl}/api/admin/nursery-subscriptions/${sub.id}`,
         {
           method: "DELETE",
-          headers: { Authorization: `Bearer ${token}` },
+          headers: { 
+            Authorization: `Bearer ${token}`,
+            "ngrok-skip-browser-warning": "true" 
+          },
         },
       );
       if (!response.ok) throw new Error("فشل الحذف");
@@ -142,36 +157,16 @@ export default function SubscriptionActions({
           onClick={() => setIsEditOpen(true)}
           className="text-secondary hover:text-primary transition-all transform hover:scale-110"
         >
-          <svg
-            className="w-5 h-5"
-            fill="none"
-            viewBox="0 0 24 24"
-            stroke="currentColor"
-          >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth={2}
-              d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"
-            />
+          <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
           </svg>
         </button>
         <button
           onClick={() => setIsDeleteOpen(true)}
           className="text-red-500 hover:text-red-700 transition-all transform hover:scale-110"
         >
-          <svg
-            className="w-5 h-5"
-            fill="none"
-            viewBox="0 0 24 24"
-            stroke="currentColor"
-          >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth={2}
-              d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"
-            />
+          <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
           </svg>
         </button>
       </div>
@@ -267,36 +262,19 @@ export default function SubscriptionActions({
                   value={formData.status}
                   onChange={handleChange}
                   options={[
-                    {
-                      value: "active",
-                      label: locale === "ar" ? "نشط" : "Active",
-                    },
-                    {
-                      value: "expired",
-                      label: locale === "ar" ? "منتهي" : "Expired",
-                    },
-                    {
-                      value: "cancelled",
-                      label: locale === "ar" ? "ملغى" : "Cancelled",
-                    },
+                    { value: "active", label: locale === "ar" ? "نشط" : "Active" },
+                    { value: "expired", label: locale === "ar" ? "منتهي" : "Expired" },
+                    { value: "cancelled", label: locale === "ar" ? "ملغى" : "Cancelled" },
                   ]}
                 />
               </div>
             </div>
           </div>
           <div className="px-6 py-4 border-t border-border flex justify-end gap-3 bg-secondary/5">
-            <button
-              type="button"
-              onClick={() => setIsEditOpen(false)}
-              className="px-5 py-2.5 rounded-lg border border-border text-foreground font-medium hover:bg-foreground/5 transition-colors"
-            >
+            <button type="button" onClick={() => setIsEditOpen(false)} className="px-5 py-2.5 rounded-lg border border-border text-foreground font-medium hover:bg-foreground/5 transition-colors">
               {locale === "ar" ? "إلغاء" : "Cancel"}
             </button>
-            <button
-              type="submit"
-              disabled={isEditLoading}
-              className="px-5 py-2.5 rounded-lg bg-primary text-primary-foreground font-medium hover:bg-secondary transition-colors shadow-sm disabled:opacity-70 flex items-center justify-center min-w-30"
-            >
+            <button type="submit" disabled={isEditLoading} className="px-5 py-2.5 rounded-lg bg-primary text-primary-foreground font-medium hover:bg-secondary transition-colors shadow-sm disabled:opacity-70 flex items-center justify-center min-w-30">
               {isEditLoading ? "..." : locale === "ar" ? "حفظ" : "Save"}
             </button>
           </div>
@@ -309,11 +287,7 @@ export default function SubscriptionActions({
         onConfirm={handleDelete}
         isLoading={isDeleteLoading}
         title={locale === "ar" ? "تأكيد الحذف" : "Confirm Delete"}
-        message={
-          locale === "ar"
-            ? "هل أنت متأكد من حذف هذا الاشتراك؟"
-            : "Delete this subscription?"
-        }
+        message={locale === "ar" ? "هل أنت متأكد من حذف هذا الاشتراك؟" : "Delete this subscription?"}
         locale={locale}
       />
     </>

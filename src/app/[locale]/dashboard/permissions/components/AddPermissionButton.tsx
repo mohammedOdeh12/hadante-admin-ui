@@ -22,12 +22,14 @@ export default function AddPermissionButton({ locale }: { locale: string }) {
 
     try {
       const token = localStorage.getItem("token");
+      const apiUrl = process.env.NEXT_PUBLIC_API_URL || "https://epidural-anointer-shrunk.ngrok-free.dev";
       
-      const response = await fetch(`https://epidural-anointer-shrunk.ngrok-free.dev/api/admin/permissions`, {
+      const response = await fetch(`${apiUrl}/api/admin/permissions`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
           "Authorization": `Bearer ${token}`,
+          "ngrok-skip-browser-warning": "true", // تخطي تحذير Ngrok
         },
         body: JSON.stringify(formData),
       });
@@ -48,8 +50,7 @@ export default function AddPermissionButton({ locale }: { locale: string }) {
     <>
       <button onClick={() => setIsOpen(true)} className="bg-primary hover:bg-secondary text-primary-foreground px-4 py-2.5 rounded-lg font-medium transition-all shadow-md hover:shadow-lg flex items-center gap-2 transform hover:-translate-y-0.5">
         {locale === "ar" ? "إضافة صلاحية" : "Add Permission"}
-                <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" /></svg>
-
+        <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" /></svg>
       </button>
 
       <Modal isOpen={isOpen} onClose={() => setIsOpen(false)} title={locale === "ar" ? "إضافة صلاحية جديدة" : "Add New Permission"} locale={locale}>

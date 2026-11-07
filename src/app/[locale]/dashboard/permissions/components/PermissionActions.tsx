@@ -38,14 +38,16 @@ export default function PermissionActions({
     setIsEditLoading(true);
     try {
       const token = localStorage.getItem("token");
+      const apiUrl = process.env.NEXT_PUBLIC_API_URL || "https://epidural-anointer-shrunk.ngrok-free.dev";
 
       const response = await fetch(
-        `https://epidural-anointer-shrunk.ngrok-free.dev/api/admin/permissions/${permission.id}`,
+        `${apiUrl}/api/admin/permissions/${permission.id}`,
         {
           method: "PUT",
           headers: {
             "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
+            "Authorization": `Bearer ${token}`,
+            "ngrok-skip-browser-warning": "true", // تخطي تحذير Ngrok
           },
           body: JSON.stringify(formData),
         },
@@ -66,11 +68,16 @@ export default function PermissionActions({
     setIsDeleteLoading(true);
     try {
       const token = localStorage.getItem("token");
+      const apiUrl = process.env.NEXT_PUBLIC_API_URL || "https://epidural-anointer-shrunk.ngrok-free.dev";
+      
       const response = await fetch(
-        `https://epidural-anointer-shrunk.ngrok-free.dev/api/admin/permissions/${permission.id}`,
+        `${apiUrl}/api/admin/permissions/${permission.id}`,
         {
           method: "DELETE",
-          headers: { Authorization: `Bearer ${token}` },
+          headers: { 
+            "Authorization": `Bearer ${token}`,
+            "ngrok-skip-browser-warning": "true", // تخطي تحذير Ngrok
+          },
         },
       );
 
@@ -92,36 +99,16 @@ export default function PermissionActions({
           onClick={() => setIsEditOpen(true)}
           className="text-secondary hover:text-primary transition-all transform hover:scale-110"
         >
-          <svg
-            className="w-5 h-5"
-            fill="none"
-            viewBox="0 0 24 24"
-            stroke="currentColor"
-          >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth={2}
-              d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"
-            />
+          <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
           </svg>
         </button>
         <button
           onClick={() => setIsDeleteOpen(true)}
           className="text-red-500 hover:text-red-700 transition-all transform hover:scale-110"
         >
-          <svg
-            className="w-5 h-5"
-            fill="none"
-            viewBox="0 0 24 24"
-            stroke="currentColor"
-          >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth={2}
-              d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"
-            />
+          <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
           </svg>
         </button>
       </div>
@@ -136,9 +123,7 @@ export default function PermissionActions({
           <div className="p-6 space-y-4">
             <div>
               <label className="block text-sm font-medium mb-1">
-                {locale === "ar"
-                  ? "اسم الصلاحية (مفتاح) *"
-                  : "Permission Name (Key) *"}
+                {locale === "ar" ? "اسم الصلاحية (مفتاح) *" : "Permission Name (Key) *"}
               </label>
               <input
                 type="text"

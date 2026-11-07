@@ -24,12 +24,14 @@ export default function AdminsTable({ locale }: { locale: string }) {
     const fetchAdmins = async () => {
       try {
         const token = localStorage.getItem("token");
+        const apiUrl = process.env.NEXT_PUBLIC_API_URL || "https://epidural-anointer-shrunk.ngrok-free.dev";
         
-        const response = await fetch(`https://epidural-anointer-shrunk.ngrok-free.dev/api/admin/super-admins`, {
+        const response = await fetch(`${apiUrl}/api/admin/super-admins`, {
           method: "GET",
           headers: {
             "Content-Type": "application/json",
             "Authorization": `Bearer ${token}`,
+            "ngrok-skip-browser-warning": "true", // تخطي التحذير
           },
         });
 
@@ -71,7 +73,6 @@ export default function AdminsTable({ locale }: { locale: string }) {
                   <td className="px-6 py-4 font-medium">{admin.name}</td>
                   <td className="px-6 py-4 text-foreground/80">{admin.email}</td>
                   <td className="px-6 py-4 text-foreground/80">
-                    {/* عرض اسم الدور من داخل كائن role القادم من الباك إند */}
                     {admin.role ? admin.role.name : "-"}
                   </td>
                   <td className="px-6 py-4">

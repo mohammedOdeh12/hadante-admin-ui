@@ -24,10 +24,15 @@ export default function SubscriptionsTable({ locale }: { locale: string }) {
     const fetchSubscriptions = async () => {
       try {
         const token = localStorage.getItem("token");
+        const apiUrl = process.env.NEXT_PUBLIC_API_URL || "https://epidural-anointer-shrunk.ngrok-free.dev";
         
-        const response = await fetch(`https://epidural-anointer-shrunk.ngrok-free.dev/api/admin/nursery-subscriptions`, {
+        const response = await fetch(`${apiUrl}/api/admin/nursery-subscriptions`, {
           method: "GET",
-          headers: { "Content-Type": "application/json", "Authorization": `Bearer ${token}` },
+          headers: { 
+            "Content-Type": "application/json", 
+            "Authorization": `Bearer ${token}`,
+            "ngrok-skip-browser-warning": "true" 
+          },
         });
 
         const data = await response.json();
@@ -45,7 +50,7 @@ export default function SubscriptionsTable({ locale }: { locale: string }) {
     switch (status) {
       case "active":
         return { style: "bg-green-100 text-green-700", text: locale === "ar" ? "نشط" : "Active" };
-      case "expired": // كما يظهر في بوستمان[cite: 6]
+      case "expired": 
         return { style: "bg-red-100 text-red-700", text: locale === "ar" ? "منتهي" : "Expired" };
       case "cancelled":
         return { style: "bg-gray-100 text-gray-700", text: locale === "ar" ? "ملغى" : "Cancelled" };
@@ -78,7 +83,6 @@ export default function SubscriptionsTable({ locale }: { locale: string }) {
               subscriptions.map((sub) => (
                 <tr key={sub.id} className="hover:bg-secondary/5 transition-colors">
                   <td className="px-6 py-4 font-medium">{sub.id}</td>
-                  {/* عرض أسماء الحضانات والباقات من الكائنات المتداخلة[cite: 6] */}
                   <td className="px-6 py-4 font-medium">{sub.nursery?.name || "-"}</td>
                   <td className="px-6 py-4 text-foreground/80">{sub.plan?.name || "-"}</td>
                   <td className="px-6 py-4 text-foreground/80">{sub.end_date}</td>

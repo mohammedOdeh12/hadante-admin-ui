@@ -30,10 +30,12 @@ export default function DashboardPage({
     const fetchDashboardStats = async () => {
       try {
         const token = localStorage.getItem("token");
-        const headers = { Authorization: `Bearer ${token}` };
-        
-        // استخدام الرابط الديناميكي أو رابط Ngrok الخاص بك مباشرة
         const apiUrl = process.env.NEXT_PUBLIC_API_URL || "https://epidural-anointer-shrunk.ngrok-free.dev";
+        
+        const headers = { 
+          "Authorization": `Bearer ${token}`,
+          "ngrok-skip-browser-warning": "true" // تخطي شاشة تحذير Ngrok
+        };
 
         const [nurseriesRes, subsRes, activitiesRes, rolesRes, mediaRes] = await Promise.all([
           fetch(`${apiUrl}/api/admin/nurseries`, { headers }),

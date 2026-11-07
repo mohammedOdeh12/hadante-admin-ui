@@ -26,8 +26,13 @@ export default function AddAdminButton({ locale }: { locale: string }) {
       const fetchRoles = async () => {
         try {
           const token = localStorage.getItem("token");
-          const res = await fetch(`https://epidural-anointer-shrunk.ngrok-free.dev/api/admin/roles`, {
-            headers: { Authorization: `Bearer ${token}` },
+          const apiUrl = process.env.NEXT_PUBLIC_API_URL || "https://epidural-anointer-shrunk.ngrok-free.dev";
+          
+          const res = await fetch(`${apiUrl}/api/admin/roles`, {
+            headers: { 
+              "Authorization": `Bearer ${token}`,
+              "ngrok-skip-browser-warning": "true" // تخطي التحذير
+            },
           });
           const data = await res.json();
           setRoles(data.data || []);
@@ -51,17 +56,19 @@ export default function AddAdminButton({ locale }: { locale: string }) {
 
     try {
       const token = localStorage.getItem("token");
+      const apiUrl = process.env.NEXT_PUBLIC_API_URL || "https://epidural-anointer-shrunk.ngrok-free.dev";
 
       const payload = {
         ...formData,
         role_id: parseInt(formData.role_id),
       };
 
-      const response = await fetch(`https://epidural-anointer-shrunk.ngrok-free.dev/api/admin/super-admins`, {
+      const response = await fetch(`${apiUrl}/api/admin/super-admins`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
+          "Authorization": `Bearer ${token}`,
+          "ngrok-skip-browser-warning": "true", // تخطي التحذير
         },
         body: JSON.stringify(payload),
       });

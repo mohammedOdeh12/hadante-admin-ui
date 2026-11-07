@@ -51,6 +51,7 @@ export default function PlanActions({
     setIsEditLoading(true);
     try {
       const token = localStorage.getItem("token");
+      const apiUrl = process.env.NEXT_PUBLIC_API_URL || "https://epidural-anointer-shrunk.ngrok-free.dev";
 
       const payload = {
         ...formData,
@@ -59,12 +60,13 @@ export default function PlanActions({
       };
 
       const response = await fetch(
-        `https://epidural-anointer-shrunk.ngrok-free.dev/api/admin/subscription-plans/${plan.id}`,
+        `${apiUrl}/api/admin/subscription-plans/${plan.id}`,
         {
           method: "PUT",
           headers: {
             "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
+            "Authorization": `Bearer ${token}`,
+            "ngrok-skip-browser-warning": "true", // تخطي التحذير
           },
           body: JSON.stringify(payload),
         },
@@ -85,11 +87,16 @@ export default function PlanActions({
     setIsDeleteLoading(true);
     try {
       const token = localStorage.getItem("token");
+      const apiUrl = process.env.NEXT_PUBLIC_API_URL || "https://epidural-anointer-shrunk.ngrok-free.dev";
+      
       const response = await fetch(
-        `https://epidural-anointer-shrunk.ngrok-free.dev/api/admin/subscription-plans/${plan.id}`,
+        `${apiUrl}/api/admin/subscription-plans/${plan.id}`,
         {
           method: "DELETE",
-          headers: { Authorization: `Bearer ${token}` },
+          headers: { 
+            "Authorization": `Bearer ${token}`,
+            "ngrok-skip-browser-warning": "true" // تخطي التحذير
+          },
         },
       );
       if (!response.ok) throw new Error("فشل الحذف");
@@ -110,36 +117,16 @@ export default function PlanActions({
           onClick={() => setIsEditOpen(true)}
           className="text-secondary hover:text-primary transition-all transform hover:scale-110"
         >
-          <svg
-            className="w-5 h-5"
-            fill="none"
-            viewBox="0 0 24 24"
-            stroke="currentColor"
-          >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth={2}
-              d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"
-            />
+          <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
           </svg>
         </button>
         <button
           onClick={() => setIsDeleteOpen(true)}
           className="text-red-500 hover:text-red-700 transition-all transform hover:scale-110"
         >
-          <svg
-            className="w-5 h-5"
-            fill="none"
-            viewBox="0 0 24 24"
-            stroke="currentColor"
-          >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth={2}
-              d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"
-            />
+          <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
           </svg>
         </button>
       </div>
@@ -251,7 +238,7 @@ export default function PlanActions({
         title={locale === "ar" ? "تأكيد الحذف" : "Confirm Delete"}
         message={
           locale === "ar"
-            ? `سيتم حذف الخظة نهائياً.`
+            ? `سيتم حذف الخطة نهائياً.`
             : `Plan will be deleted permanently.`
         }
         locale={locale}

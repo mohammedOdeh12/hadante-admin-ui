@@ -54,14 +54,16 @@ export default function NurseryActions({
 
     try {
       const token = localStorage.getItem("token");
+      const apiUrl = process.env.NEXT_PUBLIC_API_URL || "https://epidural-anointer-shrunk.ngrok-free.dev";
 
       const response = await fetch(
-        `https://epidural-anointer-shrunk.ngrok-free.dev/api/admin/nurseries/${nursery.id}`,
+        `${apiUrl}/api/admin/nurseries/${nursery.id}`,
         {
           method: "PUT",
           headers: {
             "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
+            "Authorization": `Bearer ${token}`,
+            "ngrok-skip-browser-warning": "true", // تخطي تحذير Ngrok
           },
           body: JSON.stringify(formData),
         },
@@ -88,13 +90,15 @@ export default function NurseryActions({
 
     try {
       const token = localStorage.getItem("token");
+      const apiUrl = process.env.NEXT_PUBLIC_API_URL || "https://epidural-anointer-shrunk.ngrok-free.dev";
 
       const response = await fetch(
-        `https://epidural-anointer-shrunk.ngrok-free.dev/api/admin/nurseries/${nursery.id}`,
+        `${apiUrl}/api/admin/nurseries/${nursery.id}`,
         {
           method: "DELETE",
           headers: {
-            Authorization: `Bearer ${token}`,
+            "Authorization": `Bearer ${token}`,
+            "ngrok-skip-browser-warning": "true", // تخطي تحذير Ngrok
           },
         },
       );

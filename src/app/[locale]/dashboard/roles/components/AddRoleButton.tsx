@@ -13,7 +13,6 @@ export default function AddRoleButton({ locale }: { locale: string }) {
   const [isOpen, setIsOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
 
-  // حالات الصلاحيات
   const [availablePermissions, setAvailablePermissions] = useState<Permission[]>([]);
   const [selectedPermissions, setSelectedPermissions] = useState<number[]>([]);
 
@@ -22,14 +21,18 @@ export default function AddRoleButton({ locale }: { locale: string }) {
     description: "",
   });
 
-  // جلب الصلاحيات عند فتح النافذة
   useEffect(() => {
     if (isOpen) {
       const fetchPermissions = async () => {
         try {
           const token = localStorage.getItem("token");
-          const response = await fetch("https://epidural-anointer-shrunk.ngrok-free.dev/api/admin/permissions", {
-            headers: { Authorization: `Bearer ${token}` },
+          const apiUrl = process.env.NEXT_PUBLIC_API_URL || "https://epidural-anointer-shrunk.ngrok-free.dev";
+          
+          const response = await fetch(`${apiUrl}/api/admin/permissions`, {
+            headers: { 
+              "Authorization": `Bearer ${token}`,
+              "ngrok-skip-browser-warning": "true" // تخطي التحذير
+            },
           });
           const data = await response.json();
           setAvailablePermissions(data.data || []);
@@ -59,17 +62,19 @@ export default function AddRoleButton({ locale }: { locale: string }) {
 
     try {
       const token = localStorage.getItem("token");
+      const apiUrl = process.env.NEXT_PUBLIC_API_URL || "https://epidural-anointer-shrunk.ngrok-free.dev";
       
       const payload = {
         ...formData,
         permissionIds: selectedPermissions,
       };
 
-      const response = await fetch(`https://epidural-anointer-shrunk.ngrok-free.dev/api/admin/roles`, {
+      const response = await fetch(`${apiUrl}/api/admin/roles`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
           "Authorization": `Bearer ${token}`,
+          "ngrok-skip-browser-warning": "true", // تخطي التحذير
         },
         body: JSON.stringify(payload),
       });
@@ -82,9 +87,8 @@ export default function AddRoleButton({ locale }: { locale: string }) {
 
       setIsOpen(false);
       setFormData({ name: "", description: "" });
-      setSelectedPermissions([]); // تفريغ التحديد
+      setSelectedPermissions([]); 
       window.location.reload(); 
-
     } catch (error) {
       console.error(error);
       alert("حدث خطأ أثناء الإضافة");
@@ -141,7 +145,6 @@ export default function AddRoleButton({ locale }: { locale: string }) {
               />
             </div>
 
-            {/* الصلاحيات بنفس التصميم المطلوب */}
             <div>
               <label className="block text-sm font-medium text-foreground mb-2">
                 {locale === "ar" ? "الصلاحيات الممنوحة *" : "Assigned Permissions *"}

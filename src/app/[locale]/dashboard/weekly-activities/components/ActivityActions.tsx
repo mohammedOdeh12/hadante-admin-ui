@@ -22,7 +22,6 @@ export default function ActivityActions({ activity, locale }: { activity: Activi
   const [isDeleteLoading, setIsDeleteLoading] = useState(false);
   const [nurseries, setNurseries] = useState<Nursery[]>([]);
 
-  // تعبئة البيانات مسبقاً بما في ذلك استخراج ID الحضانة
   const [formData, setFormData] = useState({
     title: activity.title,
     description: activity.description || "",
@@ -45,7 +44,14 @@ export default function ActivityActions({ activity, locale }: { activity: Activi
       const fetchNurseries = async () => {
         try {
           const token = localStorage.getItem("token");
-          const res = await fetch(`https://epidural-anointer-shrunk.ngrok-free.dev/api/admin/nurseries`, { headers: { Authorization: `Bearer ${token}` } });
+          const apiUrl = process.env.NEXT_PUBLIC_API_URL || "https://epidural-anointer-shrunk.ngrok-free.dev";
+          
+          const res = await fetch(`${apiUrl}/api/admin/nurseries`, { 
+            headers: { 
+              "Authorization": `Bearer ${token}`,
+              "ngrok-skip-browser-warning": "true" 
+            } 
+          });
           const data = await res.json();
           setNurseries(data.data || []);
         } catch (error) {
@@ -65,11 +71,16 @@ export default function ActivityActions({ activity, locale }: { activity: Activi
     setIsEditLoading(true);
     try {
       const token = localStorage.getItem("token");
+      const apiUrl = process.env.NEXT_PUBLIC_API_URL || "https://epidural-anointer-shrunk.ngrok-free.dev";
       const payload = { ...formData, nursery_id: parseInt(formData.nursery_id) };
 
-      const response = await fetch(`https://epidural-anointer-shrunk.ngrok-free.dev/api/admin/weekly-activities/${activity.id}`, {
+      const response = await fetch(`${apiUrl}/api/admin/weekly-activities/${activity.id}`, {
         method: "PUT",
-        headers: { "Content-Type": "application/json", Authorization: `Bearer ${token}` },
+        headers: { 
+          "Content-Type": "application/json", 
+          "Authorization": `Bearer ${token}`,
+          "ngrok-skip-browser-warning": "true"
+        },
         body: JSON.stringify(payload),
       });
 
@@ -77,7 +88,7 @@ export default function ActivityActions({ activity, locale }: { activity: Activi
       setIsEditOpen(false);
       window.location.reload();
     } catch (error) {
-        console.error(error);
+      console.error(error);
       alert("حدث خطأ أثناء التعديل");
     } finally {
       setIsEditLoading(false);
@@ -88,15 +99,20 @@ export default function ActivityActions({ activity, locale }: { activity: Activi
     setIsDeleteLoading(true);
     try {
       const token = localStorage.getItem("token");
-      const response = await fetch(`https://epidural-anointer-shrunk.ngrok-free.dev/api/admin/weekly-activities/${activity.id}`, {
+      const apiUrl = process.env.NEXT_PUBLIC_API_URL || "https://epidural-anointer-shrunk.ngrok-free.dev";
+      
+      const response = await fetch(`${apiUrl}/api/admin/weekly-activities/${activity.id}`, {
         method: "DELETE",
-        headers: { Authorization: `Bearer ${token}` },
+        headers: { 
+          "Authorization": `Bearer ${token}`,
+          "ngrok-skip-browser-warning": "true" 
+        },
       });
       if (!response.ok) throw new Error("فشل الحذف");
       setIsDeleteOpen(false);
       window.location.reload();
     } catch (error) {
-        console.error(error);
+      console.error(error);
       alert("حدث خطأ أثناء الحذف");
     } finally {
       setIsDeleteLoading(false);

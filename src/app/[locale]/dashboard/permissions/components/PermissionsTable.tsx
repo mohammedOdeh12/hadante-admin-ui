@@ -17,12 +17,14 @@ export default function PermissionsTable({ locale }: { locale: string }) {
     const fetchPermissions = async () => {
       try {
         const token = localStorage.getItem("token");
+        const apiUrl = process.env.NEXT_PUBLIC_API_URL || "https://epidural-anointer-shrunk.ngrok-free.dev";
         
-        const response = await fetch(`https://epidural-anointer-shrunk.ngrok-free.dev/api/admin/permissions`, {
+        const response = await fetch(`${apiUrl}/api/admin/permissions`, {
           method: "GET",
           headers: {
             "Content-Type": "application/json",
             "Authorization": `Bearer ${token}`,
+            "ngrok-skip-browser-warning": "true", // تخطي تحذير Ngrok
           },
         });
 
@@ -58,7 +60,7 @@ export default function PermissionsTable({ locale }: { locale: string }) {
               permissions.map((permission) => (
                 <tr key={permission.id} className="hover:bg-secondary/5 transition-colors">
                   <td className="px-6 py-4 font-medium">{permission.id}</td>
-                  <td className="px-6 py-4 font-medium text-primary  inline-block  rounded-md" dir="ltr">{permission.name}</td>
+                  <td className="px-6 py-4 font-medium text-primary inline-block rounded-md" dir="ltr">{permission.name}</td>
                   <td className="px-6 py-4 text-foreground/80">{permission.description || "-"}</td>
                   <td className="px-6 py-4">
                     <PermissionActions permission={permission} locale={locale} />

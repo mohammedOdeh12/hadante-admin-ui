@@ -24,14 +24,16 @@ export default function AddNurseryButton({ locale }: { locale: string }) {
 
     try {
       const token = localStorage.getItem("token");
+      const apiUrl = process.env.NEXT_PUBLIC_API_URL || "https://epidural-anointer-shrunk.ngrok-free.dev";
 
       const response = await fetch(
-        `https://epidural-anointer-shrunk.ngrok-free.dev/api/admin/nurseries`,
+        `${apiUrl}/api/admin/nurseries`,
         {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
+            "Authorization": `Bearer ${token}`,
+            "ngrok-skip-browser-warning": "true", // تخطي تحذير Ngrok
           },
           body: JSON.stringify(formData),
         },
