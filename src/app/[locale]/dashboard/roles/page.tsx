@@ -1,6 +1,5 @@
 import RolesTable from "./components/RolesTable";
 import AddRoleButton from "./components/AddRoleButton";
-import SearchInput from "../components/ui/SearchInput"; // استدعاء مكون البحث المشترك
 
 export default async function RolesPage({
   params,
@@ -26,16 +25,7 @@ export default async function RolesPage({
         <AddRoleButton locale={locale} />
       </div>
 
-      <div className="rounded-xl flex flex-col sm:flex-row justify-start items-center gap-4">
-        {/* استخدام مكون البحث المشترك */}
-        <SearchInput 
-          placeholder={
-            locale === "ar"
-              ? "ابحث عن دور بالاسم..."
-              : "Search roles by name..."
-          }
-        />
-      </div>
+      
 
       <RolesTable locale={locale} />
     </div>

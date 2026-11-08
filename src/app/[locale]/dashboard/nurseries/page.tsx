@@ -1,6 +1,5 @@
 import NurseriesTable from "./components/NurseriesTable";
 import AddNurseryButton from "./components/AddNurseryButton";
-import SearchInput from "../components/ui/SearchInput"; // استدعاء مكون البحث
 
 export default async function NurseriesPage({
   params,
@@ -27,21 +26,7 @@ export default async function NurseriesPage({
         <AddNurseryButton locale={locale} />
       </div>
 
-      {/* منطقة البحث والفلترة */}
-      <div className="rounded-xl flex flex-col sm:flex-row justify-start items-center gap-4">
-        
-        {/* استدعاء حقل البحث الموحد */}
-        <SearchInput 
-          placeholder={
-            locale === "ar"
-              ? "ابحث عن حضانة بالاسم أو البريد..."
-              : "Search nurseries by name..."
-          }
-        />
-        
-      </div>
-
-      {/* استدعاء الجدول التفاعلي المربوط بالباك إند */}
+      {/* استدعاء الجدول التفاعلي (مدمج فيه البحث والترقيم) */}
       <NurseriesTable locale={locale} />
     </div>
   );

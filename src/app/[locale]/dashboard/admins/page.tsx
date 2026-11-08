@@ -1,6 +1,5 @@
 import AdminsTable from "./components/AdminsTable";
 import AddAdminButton from "./components/AddAdminButton";
-import SearchInput from "../components/ui/SearchInput"; // استدعاء المكون العام
 
 export default async function AdminsPage({
   params,
@@ -25,17 +24,7 @@ export default async function AdminsPage({
         <AddAdminButton locale={locale} />
       </div>
 
-      <div className="rounded-xl flex flex-col sm:flex-row justify-start items-center gap-4">
-        {/* استدعاء حقل البحث الموحد */}
-        <SearchInput
-          placeholder={
-            locale === "ar"
-              ? "ابحث عن مدير بالاسم ..."
-              : "Search admins by name..."
-          }
-        />
-      </div>
-
+      {/* الجدول وبداخله سيكون حقل البحث */}
       <AdminsTable locale={locale} />
     </div>
   );

@@ -95,10 +95,11 @@ export default function AddAdminButton({ locale }: { locale: string }) {
         onClick={() => setIsOpen(true)}
         className="bg-primary hover:bg-secondary text-primary-foreground px-4 py-2.5 rounded-lg font-medium transition-all shadow-md hover:shadow-lg flex items-center gap-2 transform hover:-translate-y-0.5"
       >
+        
+        {locale === "ar" ? "إضافة مدير" : "Add Admin"}
         <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
         </svg>
-        {locale === "ar" ? "إضافة مدير" : "Add Admin"}
       </button>
 
       <Modal

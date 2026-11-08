@@ -1,6 +1,5 @@
 import PermissionsTable from "./components/PermissionsTable";
 import AddPermissionButton from "./components/AddPermissionButton";
-import SearchInput from "../components/ui/SearchInput";
 
 export default async function PermissionsPage({
   params,
@@ -25,15 +24,7 @@ export default async function PermissionsPage({
         <AddPermissionButton locale={locale} />
       </div>
 
-      <div className="rounded-xl flex flex-col sm:flex-row justify-start items-center gap-4">
-        <SearchInput
-          placeholder={
-            locale === "ar"
-              ? "ابحث عن مفتاح صلاحية..."
-              : "Search permission keys..."
-          }
-        />
-      </div>
+      
 
       <PermissionsTable locale={locale} />
     </div>

@@ -26,15 +26,13 @@ export default function LoginForm({ translations, locale = "ar" }: LoginFormProp
   const [error, setError] = useState("");
 
   // دالة إرسال البيانات للباك إند
- // دالة إرسال البيانات للباك إند
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError("");
     setIsLoading(true);
 
     try {
-           
-      // 1. تم تعديل الرابط ليطابق مسار Postman بالضبط
+      //تم تعديل الرابط ليطابق مسار Postman بالضبط
       const response = await fetch("https://epidural-anointer-shrunk.ngrok-free.dev/api/auth/admin/login", {
         method: "POST",
         headers: {
@@ -50,8 +48,13 @@ export default function LoginForm({ translations, locale = "ar" }: LoginFormProp
         throw new Error(data.message || "فشل تسجيل الدخول، تأكد من صحة البيانات.");
       }
 
-      // 2. تم تعديل مسار التوكن ليقرأه من داخل كائن data
+      // 1. حفظ التوكن
       localStorage.setItem("token", data.data.token);
+
+      // 2. التعديل الجديد: حفظ اسم المستخدم في الـ localStorage ليعرضه الـ Header
+      // يتم البحث عن الاسم داخل استجابة الباك إند (admin أو user أو name مباشر)
+      const currentName = data.data.admin?.name || data.data.user?.name || data.data.name || "Admin";
+      localStorage.setItem("userName", currentName);
 
       // التوجيه إلى لوحة التحكم
       router.push(`/${locale}/dashboard`);

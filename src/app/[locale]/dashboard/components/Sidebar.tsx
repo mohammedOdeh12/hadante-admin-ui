@@ -3,11 +3,18 @@
 import { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 
 export default function Sidebar({ locale }: { locale: string }) {
   const [isCollapsed, setIsCollapsed] = useState(false);
   const pathname = usePathname();
+  const router = useRouter(); // إضافة الـ router للتحويل
+
+  // دالة تسجيل الخروج
+  const handleLogout = () => {
+    localStorage.removeItem("token"); // مسح التوكن
+    router.push(`/${locale}/login`); // تحويل لصفحة تسجيل الدخول
+  };
 
   const navItems = [
     { name: locale === "ar" ? "الرئيسية" : "Dashboard", href: `/${locale}/dashboard`, icon: (
@@ -55,7 +62,7 @@ export default function Sidebar({ locale }: { locale: string }) {
         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 7a2 2 0 012 2m4 0a6 6 0 01-7.743 5.743L11 17H9v2H7v2H4a1 1 0 01-1-1v-2.586a1 1 0 01.293-.707l5.964-5.964A6 6 0 1121 9z" />
       </svg>
     )},
-
+// /${locale}/dashboard/media
     { name: locale === "ar" ? "الوسائط" : "Media", href: ``, icon: (
       <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
@@ -114,6 +121,26 @@ export default function Sidebar({ locale }: { locale: string }) {
           );
         })}
       </nav>
+
+      {/* منطقة زر تسجيل الخروج */}
+      <div className="p-4 border-t border-border mt-auto">
+        <button
+          onClick={handleLogout}
+          title={isCollapsed ? (locale === "ar" ? "تسجيل الخروج" : "Logout") : ""}
+          className={`w-full flex items-center rounded-lg transition-colors px-3 py-3 text-red-500 hover:bg-red-50 dark:hover:bg-red-900/20 hover:text-red-600 ${
+            isCollapsed ? "justify-center" : "justify-start"
+          }`}
+        >
+          <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
+          </svg>
+          {!isCollapsed && (
+            <span className="ms-3 font-medium">
+              {locale === "ar" ? "تسجيل الخروج" : "Logout"}
+            </span>
+          )}
+        </button>
+      </div>
     </aside>
   );
 }

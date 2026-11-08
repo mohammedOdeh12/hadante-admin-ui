@@ -1,6 +1,5 @@
 import ActivitiesTable from "./components/ActivitiesTable";
 import AddActivityButton from "./components/AddActivityButton";
-import SearchInput from "../components/ui/SearchInput";
 
 export default async function WeeklyActivitiesPage({
   params,
@@ -25,15 +24,7 @@ export default async function WeeklyActivitiesPage({
         <AddActivityButton locale={locale} />
       </div>
 
-      <div className="rounded-xl flex flex-col sm:flex-row justify-start items-center gap-4">
-        <SearchInput
-          placeholder={
-            locale === "ar"
-              ? "ابحث في الأنشطة..."
-              : "Search activities..."
-          }
-        />
-      </div>
+      
 
       <ActivitiesTable locale={locale} />
     </div>

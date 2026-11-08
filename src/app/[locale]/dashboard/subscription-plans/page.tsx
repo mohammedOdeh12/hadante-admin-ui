@@ -1,6 +1,5 @@
 import PlansTable from "./components/PlansTable";
 import AddPlanButton from "./components/AddPlanButton";
-import SearchInput from "../components/ui/SearchInput";
 
 export default async function SubscriptionPlansPage({
   params,
@@ -25,15 +24,7 @@ export default async function SubscriptionPlansPage({
         <AddPlanButton locale={locale} />
       </div>
 
-      <div className="rounded-xl flex flex-col sm:flex-row justify-start items-center gap-4">
-        <SearchInput
-          placeholder={
-            locale === "ar"
-              ? "ابحث عن باقة..."
-              : "Search plans..."
-          }
-        />
-      </div>
+     
 
       <PlansTable locale={locale} />
     </div>

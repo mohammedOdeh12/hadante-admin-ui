@@ -1,6 +1,5 @@
 import SubscriptionsTable from "./components/SubscriptionsTable";
 import AddSubscriptionButton from "./components/AddSubscriptionButton";
-import SearchInput from "../components/ui/SearchInput";
 
 export default async function SubscriptionsPage({
   params,
@@ -25,15 +24,7 @@ export default async function SubscriptionsPage({
         <AddSubscriptionButton locale={locale} />
       </div>
 
-      <div className="rounded-xl flex flex-col sm:flex-row justify-start items-center gap-4">
-        <SearchInput
-          placeholder={
-            locale === "ar"
-              ? "ابحث باسم الحضانة..."
-              : "Search by nursery name..."
-          }
-        />
-      </div>
+      
 
       <SubscriptionsTable locale={locale} />
     </div>
