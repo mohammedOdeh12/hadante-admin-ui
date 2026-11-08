@@ -4,7 +4,7 @@ import { useEffect, useState, useTransition } from "react";
 import { usePathname, useRouter } from "next/navigation";
 
 export default function Header({ locale }: { locale: string }) {
-  const [isDarkMode, setIsDarkMode] = useState(false);
+  const [, setIsDarkMode] = useState(false);
   const [isPending, startTransition] = useTransition(); 
   
   // حالة تخزين اسم المستخدم
@@ -52,15 +52,7 @@ export default function Header({ locale }: { locale: string }) {
       .join(" ");
   };
 
-  // دالة لاستخراج الحروف الأولى للأيقونة (مثلاً MO بدلاً من M فقط)
-  const getInitials = (name: string) => {
-    if (name === "..." || !name) return "";
-    const words = name.trim().split(" ");
-    if (words.length >= 2) {
-      return (words[0].charAt(0) + words[1].charAt(0)).toUpperCase();
-    }
-    return name.charAt(0).toUpperCase();
-  };
+  
 
   const displayName = formatName(userName);
 
@@ -93,16 +85,13 @@ export default function Header({ locale }: { locale: string }) {
         </button>
 
         {/* عرض اسم المستخدم وحرفه الأول الديناميكي */}
-        <div className="flex items-center gap-3 bg-secondary/5 pe-1.5 ps-4 py-1.5 rounded-full border border-border shadow-sm max-w-[200px] sm:max-w-[250px]">
+        <div className="flex items-center gap-3 bg-secondary/5  px-4 py-1.5 rounded-full border border-border shadow-sm max-w-50 sm:max-w-62.5">
           {/* عرض الاسم المنسق (Mohammed Odeh) */}
           <span className="font-semibold text-md text-foreground/90 truncate whitespace-nowrap" title={displayName}>
             {displayName}
           </span>
           
-          {/* عرض الحروف المختصرة (MO) */}
-          <div className="shrink-0 w-9 h-9 rounded-full bg-primary flex items-center justify-center text-primary-foreground font-bold shadow-md uppercase text-sm tracking-wider">
-            {getInitials(userName)}
-          </div>
+          
         </div>
         
       </div>
