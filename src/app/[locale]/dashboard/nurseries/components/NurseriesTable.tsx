@@ -276,7 +276,7 @@ export default function NurseriesTable({ locale }: { locale: string }) {
                         <StatusBadge status={currentSub?.status || "pending"} />
                       </td>
 
-                      <td className="px-4 py-4 text-foreground/80 text-start min-w-[150px] align-middle">
+                      <td className="px-4 py-4 text-foreground/80 text-start min-w-37.5 align-middle">
                         {nursery.address || "-"}
                       </td>
                       <td
@@ -290,7 +290,7 @@ export default function NurseriesTable({ locale }: { locale: string }) {
                         <StatusBadge status={nursery.is_active} />
                       </td>
 
-                      <td className="px-4 py-4 text-foreground/80 text-start text-xs max-w-[100px] align-middle">
+                      <td className="px-4 py-4 text-foreground/80 text-start text-xs max-w-25 align-middle">
                         {formatDate(nursery.created_at)}
                       </td>
                       <td className="px-4 py-4 text-start whitespace-nowrap align-middle">

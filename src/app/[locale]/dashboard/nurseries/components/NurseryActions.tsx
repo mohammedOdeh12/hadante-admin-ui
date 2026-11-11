@@ -47,11 +47,31 @@ export default function NurseryActions({ nursery, locale }: { nursery: Nursery; 
 
   const getImageUrl = (url: string | null | undefined) => {
     if (!url) return null;
-    if (url.startsWith("http")) return url;
+    
+    // إذا كان الرابط محلي للمعاينة (Blob/Data)، نرجعه زي ما هو
     if (url.startsWith("data:image") || url.startsWith("blob:")) return url;
+
     const cleanApiUrl = apiUrl.replace(/\/+$/, '');
-    const cleanPath = url.startsWith('/') ? url : `/${url}`;
-    return `${cleanApiUrl}${cleanPath}`;
+
+    // فحص إذا كان الرابط يحتوي على localhost وتبديله برابط ngrok
+    try {
+      const parsedUrl = new URL(url);
+      if (parsedUrl.hostname === 'localhost' || parsedUrl.hostname === '127.0.0.1') {
+         return `${cleanApiUrl}${parsedUrl.pathname}`;
+      }
+    } catch (e) {
+      console.log("فشل تحليل الرابط:", e);
+      // إذا فشل تحليل الرابط، بنكمل للكود اللي تحته
+    }
+
+    // إذا الرابط عبارة عن مسار نسبي (ما ببدأ بـ http)، بنضيفله رابط الـ API
+    if (!url.startsWith("http")) {
+      const cleanPath = url.startsWith('/') ? url : `/${url}`;
+      return `${cleanApiUrl}${cleanPath}`;
+    }
+    
+    // إذا كان رابط خارجي سليم، بنرجعه زي ما هو
+    return url;
   };
 
   const [logoPreview, setLogoPreview] = useState<string | null>(nursery.logo?.file_url ? getImageUrl(nursery.logo.file_url) : null); 
