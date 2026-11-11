@@ -5,11 +5,14 @@ import Modal from "../../components/ui/Modal";
 import ConfirmAlert from "../../components/ui/ConfirmAlert";
 import CustomSelect from "../../components/ui/CustomSelect";
 
+// تحديث الـ Interface 
 interface SubscriptionPlan {
   id: number;
   name: string;
-  price: string;
-  duration_in_months: number;
+  monthly_price: string | number;
+  yearly_price: string | number;
+  max_children: number;
+  ai_reports_enabled: boolean;
   description: string;
   is_active: boolean;
 }
@@ -28,8 +31,10 @@ export default function PlanActions({
 
   const [formData, setFormData] = useState({
     name: plan.name,
-    price: plan.price,
-    duration_in_months: plan.duration_in_months.toString(),
+    monthly_price: plan.monthly_price.toString(),
+    yearly_price: plan.yearly_price.toString(),
+    max_children: plan.max_children.toString(),
+    ai_reports_enabled: plan.ai_reports_enabled,
     description: plan.description || "",
     is_active: plan.is_active,
   });
@@ -39,8 +44,9 @@ export default function PlanActions({
       HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement
     >,
   ) => {
-    if (e.target.name === "is_active") {
-      setFormData({ ...formData, is_active: e.target.value === "true" });
+    // معالجة الـ Select المنطقي (boolean)
+    if (e.target.name === "is_active" || e.target.name === "ai_reports_enabled") {
+      setFormData({ ...formData, [e.target.name]: e.target.value === "true" });
     } else {
       setFormData({ ...formData, [e.target.name]: e.target.value });
     }
@@ -55,8 +61,9 @@ export default function PlanActions({
 
       const payload = {
         ...formData,
-        duration_in_months: parseInt(formData.duration_in_months),
-        price: parseFloat(formData.price),
+        monthly_price: parseFloat(formData.monthly_price),
+        yearly_price: parseFloat(formData.yearly_price),
+        max_children: parseInt(formData.max_children),
       };
 
       const response = await fetch(
@@ -66,7 +73,7 @@ export default function PlanActions({
           headers: {
             "Content-Type": "application/json",
             "Authorization": `Bearer ${token}`,
-            "ngrok-skip-browser-warning": "true", // تخطي التحذير
+            "ngrok-skip-browser-warning": "true",
           },
           body: JSON.stringify(payload),
         },
@@ -95,7 +102,7 @@ export default function PlanActions({
           method: "DELETE",
           headers: { 
             "Authorization": `Bearer ${token}`,
-            "ngrok-skip-browser-warning": "true" // تخطي التحذير
+            "ngrok-skip-browser-warning": "true"
           },
         },
       );
@@ -152,35 +159,68 @@ export default function PlanActions({
                 className="w-full px-4 py-2.5 rounded-lg border border-border focus:ring-2 focus:ring-primary/40 outline-none text-start transition-all"
               />
             </div>
+            
             <div className="grid grid-cols-2 gap-4">
               <div>
                 <label className="block text-sm font-medium text-foreground mb-1">
-                  {locale === "ar" ? "السعر *" : "Price *"}
+                  {locale === "ar" ? "السعر الشهري *" : "Monthly Price *"}
                 </label>
                 <input
                   type="number"
                   step="0.01"
-                  name="price"
+                  name="monthly_price"
                   required
-                  value={formData.price}
+                  value={formData.monthly_price}
                   onChange={handleChange}
                   className="w-full px-4 py-2.5 rounded-lg border border-border focus:ring-2 focus:ring-primary/40 outline-none text-start transition-all"
                 />
               </div>
               <div>
                 <label className="block text-sm font-medium text-foreground mb-1">
-                  {locale === "ar" ? "المدة (بالأشهر) *" : "Duration *"}
+                  {locale === "ar" ? "السعر السنوي *" : "Yearly Price *"}
                 </label>
                 <input
                   type="number"
-                  name="duration_in_months"
+                  step="0.01"
+                  name="yearly_price"
                   required
-                  value={formData.duration_in_months}
+                  value={formData.yearly_price}
                   onChange={handleChange}
                   className="w-full px-4 py-2.5 rounded-lg border border-border focus:ring-2 focus:ring-primary/40 outline-none text-start transition-all"
                 />
               </div>
             </div>
+
+            <div className="grid grid-cols-2 gap-4">
+              <div>
+                <label className="block text-sm font-medium text-foreground mb-1">
+                  {locale === "ar" ? "أقصى عدد أطفال *" : "Max Children *"}
+                </label>
+                <input
+                  type="number"
+                  name="max_children"
+                  required
+                  value={formData.max_children}
+                  onChange={handleChange}
+                  className="w-full px-4 py-2.5 rounded-lg border border-border focus:ring-2 focus:ring-primary/40 outline-none text-start transition-all"
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-foreground mb-1">
+                  {locale === "ar" ? "تقارير الذكاء الاصطناعي" : "AI Reports"}
+                </label>
+                <CustomSelect
+                  name="ai_reports_enabled"
+                  value={formData.ai_reports_enabled ? "true" : "false"}
+                  onChange={handleChange}
+                  options={[
+                    { value: "true", label: locale === "ar" ? "مفعل" : "Enabled" },
+                    { value: "false", label: locale === "ar" ? "معطل" : "Disabled" },
+                  ]}
+                />
+              </div>
+            </div>
+
             <div>
               <label className="block text-sm font-medium text-foreground mb-1">
                 {locale === "ar" ? "الحالة" : "Status"}
@@ -191,13 +231,11 @@ export default function PlanActions({
                 onChange={handleChange}
                 options={[
                   { value: "true", label: locale === "ar" ? "نشط" : "Active" },
-                  {
-                    value: "false",
-                    label: locale === "ar" ? "غير نشط" : "Inactive",
-                  },
+                  { value: "false", label: locale === "ar" ? "غير نشط" : "Inactive" },
                 ]}
               />
             </div>
+            
             <div>
               <label className="block text-sm font-medium text-foreground mb-1">
                 {locale === "ar" ? "الوصف" : "Description"}

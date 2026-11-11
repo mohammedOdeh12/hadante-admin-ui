@@ -13,19 +13,21 @@ export default async function DashboardLayout({
 
   return (
     <div 
-      className="flex h-screen bg-background text-foreground overflow-hidden" 
+      className="flex h-screen bg-[#f8f9fa] dark:bg-[#0f172a] text-foreground overflow-hidden" 
       dir={isRtl ? "rtl" : "ltr"}
     >
-      {/* الشريط الجانبي الثابت */}
+      {/* الشريط الجانبي */}
       <Sidebar locale={locale} />
 
-      {/* المنطقة الرئيسية التي تحتوي الهيدر والمحتوى */}
-      <div className="flex-1 flex flex-col h-full overflow-hidden">
+      {/* المنطقة الرئيسية */}
+      <div className="flex-1 flex flex-col h-full overflow-hidden relative">
         <Header locale={locale} />
         
-        {/* منطقة المحتوى المتغير */}
-        <main className="flex-1 overflow-y-auto p-6 bg-white ">
-          {children}
+        {/* منطقة المحتوى - أضفنا مسافة علوية (pt-2) وتنسيق عام */}
+        <main className="flex-1 overflow-y-auto px-4 sm:px-8 pb-8 pt-10">
+          <div className="w-full space-y-6">
+            {children}
+          </div>
         </main>
       </div>
     </div>

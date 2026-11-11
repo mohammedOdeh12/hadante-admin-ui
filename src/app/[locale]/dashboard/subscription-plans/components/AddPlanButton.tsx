@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import Modal from "../../components/ui/Modal";
+import CustomSelect from "../../components/ui/CustomSelect"; // تم استيراد CustomSelect
 
 export default function AddPlanButton({ locale }: { locale: string }) {
   const [isOpen, setIsOpen] = useState(false);
@@ -9,12 +10,14 @@ export default function AddPlanButton({ locale }: { locale: string }) {
 
   const [formData, setFormData] = useState({
     name: "",
-    price: "",
-    duration_in_months: "",
+    monthly_price: "",
+    yearly_price: "",
+    max_children: "",
+    ai_reports_enabled: "false", 
     description: "",
   });
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
@@ -28,8 +31,10 @@ export default function AddPlanButton({ locale }: { locale: string }) {
       
       const payload = {
         ...formData,
-        duration_in_months: parseInt(formData.duration_in_months),
-        price: parseFloat(formData.price),
+        monthly_price: parseFloat(formData.monthly_price),
+        yearly_price: parseFloat(formData.yearly_price),
+        max_children: parseInt(formData.max_children),
+        ai_reports_enabled: formData.ai_reports_enabled === "true",
       };
 
       const response = await fetch(`${apiUrl}/api/admin/subscription-plans`, {
@@ -37,7 +42,7 @@ export default function AddPlanButton({ locale }: { locale: string }) {
         headers: {
           "Content-Type": "application/json",
           "Authorization": `Bearer ${token}`,
-          "ngrok-skip-browser-warning": "true", // تخطي التحذير
+          "ngrok-skip-browser-warning": "true",
         },
         body: JSON.stringify(payload),
       });
@@ -88,15 +93,39 @@ export default function AddPlanButton({ locale }: { locale: string }) {
             <div className="grid grid-cols-2 gap-4">
               <div>
                 <label className="block text-sm font-medium text-foreground mb-1">
-                  {locale === "ar" ? "السعر *" : "Price *"}
+                  {locale === "ar" ? "السعر الشهري *" : "Monthly Price *"}
                 </label>
-                <input type="number" step="0.01" name="price" required value={formData.price} onChange={handleChange} className="w-full px-4 py-2.5 rounded-lg border border-border focus:ring-2 focus:ring-primary/40 outline-none text-start transition-all" placeholder="150.00" />
+                <input type="number" step="0.01" name="monthly_price" required value={formData.monthly_price} onChange={handleChange} className="w-full px-4 py-2.5 rounded-lg border border-border focus:ring-2 focus:ring-primary/40 outline-none text-start transition-all" placeholder="15.00" />
               </div>
               <div>
                 <label className="block text-sm font-medium text-foreground mb-1">
-                  {locale === "ar" ? "المدة (بالأشهر) *" : "Duration (Months) *"}
+                  {locale === "ar" ? "السعر السنوي *" : "Yearly Price *"}
                 </label>
-                <input type="number" name="duration_in_months" required value={formData.duration_in_months} onChange={handleChange} className="w-full px-4 py-2.5 rounded-lg border border-border focus:ring-2 focus:ring-primary/40 outline-none text-start transition-all" placeholder="6" />
+                <input type="number" step="0.01" name="yearly_price" required value={formData.yearly_price} onChange={handleChange} className="w-full px-4 py-2.5 rounded-lg border border-border focus:ring-2 focus:ring-primary/40 outline-none text-start transition-all" placeholder="150.00" />
+              </div>
+            </div>
+
+            <div className="grid grid-cols-2 gap-4">
+              <div>
+                <label className="block text-sm font-medium text-foreground mb-1">
+                  {locale === "ar" ? "أقصى عدد أطفال *" : "Max Children *"}
+                </label>
+                <input type="number" name="max_children" required value={formData.max_children} onChange={handleChange} className="w-full px-4 py-2.5 rounded-lg border border-border focus:ring-2 focus:ring-primary/40 outline-none text-start transition-all" placeholder="50" />
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-foreground mb-1">
+                  {locale === "ar" ? "تقارير الذكاء الاصطناعي" : "AI Reports"}
+                </label>
+                {/* استبدال الـ select العادي بـ CustomSelect */}
+                <CustomSelect
+                  name="ai_reports_enabled"
+                  value={formData.ai_reports_enabled}
+                  onChange={handleChange}
+                  options={[
+                    { value: "true", label: locale === "ar" ? "مفعل" : "Enabled" },
+                    { value: "false", label: locale === "ar" ? "معطل" : "Disabled" },
+                  ]}
+                />
               </div>
             </div>
 
